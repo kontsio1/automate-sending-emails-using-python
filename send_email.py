@@ -7,7 +7,7 @@ from pathlib import Path
 from dotenv import load_dotenv  # pip install python-dotenv
 
 PORT = 587  
-EMAIL_SERVER = "smtp-mail.outlook.com"  # Adjust server address, if you are not using @outlook
+EMAIL_SERVER = "smtp.office365.com"  # Adjust server address, if you are not using @outlook
 
 # Load the environment variables
 current_dir = Path(__file__).resolve().parent if "__file__" in locals() else Path.cwd()
@@ -55,18 +55,19 @@ def send_email(subject, receiver_email, name, due_date, invoice_no, amount):
     """,
         subtype="html",
     )
-
-    with smtplib.SMTP(EMAIL_SERVER, PORT) as server:
+    with smtplib.SMTP_SSL(EMAIL_SERVER, PORT) as server:
         server.starttls()
         server.login(sender_email, password_email)
-        server.sendmail(sender_email, receiver_email, msg.as_string())
+        response = server.sendmail(sender_email, receiver_email, msg.as_string())
+        print(response)
+
 
 
 if __name__ == "__main__":
     send_email(
         subject="Invoice Reminder",
         name="John Doe",
-        receiver_email="codingisfun.testuser@gmail.com",
+        receiver_email="kontsio18@gmail.com",
         due_date="11, Aug 2022",
         invoice_no="INV-21-12-009",
         amount="5",
