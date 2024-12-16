@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daily Wordle Score</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f4f8;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      h1,
+      h2 {
+        text-align: center;
+        color: #333;
+      }
+
+      .score-box,
+      .cumulative-score {
+        margin-bottom: 30px;
+      }
+
+      .score-display {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 15px;
+      }
+
+      .score-tile {
+        width: 40px;
+        height: 40px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+
+      .gray {
+        background-color: #d3d6da;
+        margin-right: 10;
+      }
+
+      .yellow {
+        background-color: #f7c948;
+        margin-right: 10;
+      }
+
+      .green {
+        background-color: #6aaa64;
+        margin-right: 10;
+      }
+
+      .cumulative-score p {
+        font-size: 1.2em;
+        text-align: center;
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Geia sou mwraki mwraki mwraki mwraki</h1>
+      <h2>It is me</h2>
+      <img
+        width="300"
+        src="https://i.pinimg.com/736x/2c/02/82/2c0282b3cd35a2602608cc39d75a40a2.jpg"
+      /><img />
+      <!-- Daily Score Section -->
+      <div class="score-box">
+        <h2>here will be your wordle score someday</h2>
+        <div class="score-display">
+          <!-- Example of color-coded score boxes -->
+          <div class="score-tile gray"></div>
+          <div class="score-tile yellow"></div>
+          <div class="score-tile green"></div>
+          <div class="score-tile green"></div>
+          <div class="score-tile gray"></div>
+        </div>
+      </div>
+
+      <!-- Cumulative Score Section -->
+      <div class="cumulative-score">
+        <h2>Cumulative Score</h2>
+        <p>Total Games Played: 1 | Total Correct Guesses: 3</p>
+      </div>
+    </div>
+  </body>
+</html>
