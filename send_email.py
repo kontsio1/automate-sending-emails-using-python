@@ -1,74 +1,42 @@
-import os
 import smtplib
-from email.message import EmailMessage
-from email.utils import formataddr
-from pathlib import Path
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import os
 
-from dotenv import load_dotenv  # pip install python-dotenv
+# Amazon SES SMTP credentials
+SMTP_SERVER = "email-smtp.eu-west-2.amazonaws.com"  # Replace with the correct region (us-east-1 in this case)
+SMTP_PORT = 587  # Use port 587 for TLS
+SMTP_USERNAME = os.getenv("SES_SMTP_USERNAME")  # You can set your SES SMTP username here
+SMTP_PASSWORD = os.getenv("SES_SMTP_PASSWORD")  # You can set your SES SMTP password here
 
-PORT = 587  
-EMAIL_SERVER = "smtp.office365.com"  # Adjust server address, if you are not using @outlook
+# Sender and Receiver Email
+SENDER_EMAIL = "kontsio18@gmail.com"  # Your verified email in SES
+RECEIVER_EMAIL = "kontsio18@gmail.com"  # The email you're sending to
 
-# Load the environment variables
-current_dir = Path(__file__).resolve().parent if "__file__" in locals() else Path.cwd()
-envars = current_dir / ".env"
-load_dotenv(envars)
+def send_email(subject, body):
+    # Create the email
+    msg = MIMEMultipart()
+    msg['From'] = SENDER_EMAIL
+    msg['To'] = RECEIVER_EMAIL
+    msg['Subject'] = subject
 
-# Read environment variables
-sender_email = os.getenv("EMAIL")
-password_email = os.getenv("PASSWORD")
+    # Attach the email body
+    msg.attach(MIMEText(body, 'plain'))
 
+    try:
+        # Connect to SES SMTP server
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+            server.starttls()  # Secure the connection using TLS
+            server.login(SMTP_USERNAME, SMTP_PASSWORD)
+            server.sendmail(SENDER_EMAIL, RECEIVER_EMAIL, msg.as_string())
+            print("Email sent successfully!")
 
-def send_email(subject, receiver_email, name, due_date, invoice_no, amount):
-    # Create the base text message.
-    msg = EmailMessage()
-    msg["Subject"] = subject
-    msg["From"] = formataddr(("Coding Is Fun Corp.", f"{sender_email}"))
-    msg["To"] = receiver_email
-    msg["BCC"] = sender_email
-
-    msg.set_content(
-        f"""\
-        Hi {name},
-        I hope you are well.
-        I just wanted to drop you a quick note to remind you that {amount} USD in respect of our invoice {invoice_no} is due for payment on {due_date}.
-        I would be really grateful if you could confirm that everything is on track for payment.
-        Best regards
-        YOUR NAME
-        """
-    )
-    # Add the html version.  This converts the message into a multipart/alternative
-    # container, with the original text message as the first part and the new html
-    # message as the second part.
-    msg.add_alternative(
-        f"""\
-    <html>
-      <body>
-        <p>Hi {name},</p>
-        <p>I hope you are well.</p>
-        <p>I just wanted to drop you a quick note to remind you that <strong>{amount} USD</strong> in respect of our invoice {invoice_no} is due for payment on <strong>{due_date}</strong>.</p>
-        <p>I would be really grateful if you could confirm that everything is on track for payment.</p>
-        <p>Best regards</p>
-        <p>YOUR NAME</p>
-      </body>
-    </html>
-    """,
-        subtype="html",
-    )
-    with smtplib.SMTP_SSL(EMAIL_SERVER, PORT) as server:
-        server.starttls()
-        server.login(sender_email, password_email)
-        response = server.sendmail(sender_email, receiver_email, msg.as_string())
-        print(response)
-
-
+    except Exception as e:
+        print(f"Error sending email: {e}")
 
 if __name__ == "__main__":
+    # Example of sending an email
     send_email(
         subject="Invoice Reminder",
-        name="John Doe",
-        receiver_email="kontsio18@gmail.com",
-        due_date="11, Aug 2022",
-        invoice_no="INV-21-12-009",
-        amount="5",
+        body="Hello, this is a reminder for your pending invoice payment."
     )
