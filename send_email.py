@@ -26,7 +26,7 @@ def load_html_template():
 
 # List of recipients and their dynamic details
 users = [
-    # {"email": "kontsio18@gmail.com", "name": "Konstantinos"},
+    {"email": "kontsio18@gmail.com", "name": "Konstantinos"},
     {"email": "katerina.ant20@gmail.com", "name": "Katerina"},
 ]
 
