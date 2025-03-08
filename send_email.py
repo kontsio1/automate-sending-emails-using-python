@@ -4,6 +4,11 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import os
 
+from dotenv import load_dotenv
+
+# Load environment variables - only for dev
+load_dotenv()
+
 # SES SMTP credentials (Environment variables should be set in Lambda)
 SMTP_SERVER = os.getenv("SMTP_SERVER")
 SMTP_PORT = 587  # Port 587 for TLS
@@ -22,19 +27,16 @@ class UserEmailDto:
         self.name = name
         self.subject = subject
 
-def load_html_template() -> str:
-    # Assuming the template is stored in an S3 bucket (or hardcoded for simplicity)
-    template_path = "automate-sending-emails-using-python/email_template.json"
-    # For simplicity, let's assume the template is hardcoded in Lambda (as an example)
-    html_template = """
-    <html>
-        <body>
-            <h1>Hello, {name}!</h1>
-            <p>This is a test email from AWS Lambda.</p>
-        </body>
-    </html>
-    """
-    return html_template
+def load_html_template()-> str:
+    template_path = "automate-sending-emails-using-python\email_template.json"
+    print(f"Looking for template at: {template_path}")
+    try:
+        with open(template_path, "r") as file:
+            data = json.load(file)
+            return data["html_template"]
+    except FileNotFoundError:
+        print(f"HTML template file not found at {template_path}")
+        return ""
 
 def send_email_to_multiple_users(target_users: list[UserEmailDto]):
     html_template = load_html_template()
